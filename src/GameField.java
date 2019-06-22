@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
@@ -30,15 +31,13 @@ public class GameField extends JPanel implements ActionListener {
     private final int ALL_DOTES = 400;
     private Image dot;
     private Image apple;
-    private int appleX;
-    private int appleY;
-    private int[] x = new int[ALL_DOTES];
-    private int[] y = new int[ALL_DOTES];
-    private int dots;
+    Apple mApple;
+    Snake mSnake;
+    private final int POLE_SIZE = 19;
     private Timer timer;
     private boolean inGame = true;
     //private Direction dir = Direction.Right;
-    private Direction dir = Direction.Right;
+
     private Map<Integer, Direction> encoding  = new HashMap<>();
     private final int initialTimePeriod = 380;
 
@@ -49,6 +48,8 @@ public class GameField extends JPanel implements ActionListener {
         addKeyListener(new FieldKeyListener());
         setFocusable(true);
 
+
+
         encoding.put(KeyEvent.VK_LEFT, Direction.Left);
         encoding.put(KeyEvent.VK_RIGHT, Direction.Right);
         encoding.put(KeyEvent.VK_UP, Direction.Up);
@@ -56,30 +57,13 @@ public class GameField extends JPanel implements ActionListener {
     }
 
     public void initGame() {
-        dots = 3;
-        for (int i = 0; i < dots; ++i) {
-            x[i] = 48 - i * DOT_SIZE;
-            y[i] = 48;
-        }
-
-        //timer = new Timer(((dots - 3)/5 + 1) * 250, this);
+        mSnake = new Snake(POLE_SIZE);
+        mApple = new Apple(POLE_SIZE, mSnake.getCoordinates());
         timer = new Timer( initialTimePeriod, this);
         timer.start();
-        createApple();
     }
 
-    public void createApple() {
-        boolean check = true;
-        while (check) {
-            appleX = new Random().nextInt(19) * DOT_SIZE;
-            appleY = new Random().nextInt(19) * DOT_SIZE;
 
-            check = false;
-            for (int i = 0; i < dots; ++i) check |= appleX == x[i] && appleY == y[i];
-        }
-        ;
-
-    }
 
     public void loadImages() {
         ImageIcon appleIcon = new ImageIcon("apple.png");
@@ -93,9 +77,12 @@ public class GameField extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (inGame) {
-            g.drawImage(apple, appleX, appleY, this);
-            for (int i = 0; i < dots; ++i) {
-                g.drawImage(dot, x[i], y[i], this);
+            Point appleCoord = mApple.getAppleCoordinates();
+            ArrayList<Point> mSnakeCoord = mSnake.getCoordinates();
+
+            g.drawImage(apple, appleCoord.x * DOT_SIZE, appleCoord.y * DOT_SIZE, this);
+            for (int i = 0; i < mSnakeCoord.size(); ++i) {
+                g.drawImage(dot, mSnakeCoord.get(i).x * DOT_SIZE,  mSnakeCoord.get(i).y * DOT_SIZE, this);
             }
         } else {
             String str = "Game cacai!";
@@ -106,46 +93,24 @@ public class GameField extends JPanel implements ActionListener {
         }
     }
 
-    public void move() {
-        for (int i = dots; i > 0; i--) {
-            x[i] = x[i - 1];
-            y[i] = y[i - 1];
-        }
 
-        if (dir == Direction.Up || dir == Direction.Down) {
-            y[0] += ((dir == Direction.Up) ? -1 : 1) * DOT_SIZE;
-        } else {
-            x[0] += ((dir == Direction.Left) ? -1 : 1) * DOT_SIZE;
-        }
-    }
 
-    public void checkApple() {
-        if (x[0] == appleX && y[0] == appleY) {
-            dots++;
-            createApple();
-            timer.setDelay((int)((double)initialTimePeriod / ((dots - 3.) / 10. + 1.)));
-            //timer = new Timer((int)(250. / ((dots - 3.) + 1.)), this);
-        }
-    }
+
 
     public void checkCollisions() {
-        for (int i = 3; i < dots; ++i) {
-            if (x[0] == x[i] && y[0] == y[i]) {
-                inGame = false;
-            }
-        }
-
-        if (x[0] > SIZE || x[0] < 0 || y[0] > SIZE || y[0] < 0) {
-            inGame = false;
-        }
+        mSnake.selfHarm(SIZE);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (inGame) {
-            checkApple();
+            if (mApple.isAte(mSnake.getCoordinates()))
+            {
+                mSnake.feed();
+                mApple.createApple(POLE_SIZE, mSnake.getCoordinates());
+            }
             checkCollisions();
-            move();
+            mSnake.move();
         }
         repaint();
     }
@@ -155,7 +120,7 @@ public class GameField extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
             super.keyPressed(e);
             Direction newDir = encoding.get(e.getKeyCode());
-            if (!dir.isOppositeDirection(newDir)) dir = newDir;
+            mSnake.setmDirection(newDir);
             /*if (key == KeyEvent.VK_LEFT && dir != Direction.Right) {
                 dir = Direction.Left;
             }
