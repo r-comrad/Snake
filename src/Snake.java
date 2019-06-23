@@ -67,4 +67,9 @@ public class Snake {
     public void setmDirection(Direction aNewDir) {
         if (!mDirection.isOppositeDirection(aNewDir)) mDirection = aNewDir;
     }
+
+    public int getPoints()
+    {
+        return mCoordinates.size() - 3;
+    }
 }

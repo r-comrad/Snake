@@ -63,8 +63,6 @@ public class GameField extends JPanel implements ActionListener {
         timer.start();
     }
 
-
-
     public void loadImages() {
         ImageIcon appleIcon = new ImageIcon("apple.png");
         apple = appleIcon.getImage();
@@ -94,13 +92,6 @@ public class GameField extends JPanel implements ActionListener {
     }
 
 
-
-
-
-    public void checkCollisions() {
-        mSnake.selfHarm(SIZE);
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (inGame) {
@@ -108,8 +99,9 @@ public class GameField extends JPanel implements ActionListener {
             {
                 mSnake.feed();
                 mApple.createApple(POLE_SIZE, mSnake.getCoordinates());
+                timer.setDelay((int) (initialTimePeriod / (1. + mSnake.getPoints() / 7.5)));
             }
-            checkCollisions();
+            if (mSnake.selfHarm(SIZE)) inGame = false;
             mSnake.move();
         }
         repaint();
