@@ -72,4 +72,9 @@ public class Snake {
     {
         return mCoordinates.size() - 3;
     }
+
+    public Direction getDirection()
+    {
+        return mDirection;
+    }
 }
