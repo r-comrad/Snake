@@ -1,5 +1,7 @@
 import javax.swing.*;
 
+
+
 public class MainWindow extends JFrame
 {
     public MainWindow()
@@ -8,6 +10,7 @@ public class MainWindow extends JFrame
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(320, 345);
         setLocation(470, 125);
+        //setLocationRelativeTo(null);
         add(new GameField());
         setVisible(true);
     }
