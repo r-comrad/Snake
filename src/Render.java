@@ -45,10 +45,10 @@ public class Render {
         g.drawImage(apple, aAppleCoord.x * DOT_SIZE, aAppleCoord.y * DOT_SIZE, null);
     }
 
-    public void snakeRender(Graphics2D g, ArrayList<Point> aSnakeCoord)
+    public void snakeRender(Graphics2D g, ArrayList<Point> aSnakeCoord, Direction aSnakeDirection)
     {
-        snakeHeadRender(g, aSnakeCoord.get(0));
         snakeBodyRender(g, aSnakeCoord);
+        snakeHeadRender(g, aSnakeCoord.get(0), aSnakeDirection);
     }
 
     private void snakeBodyRender(Graphics2D g, ArrayList<Point> aSnakeCoord)
@@ -59,14 +59,18 @@ public class Render {
 
     }
 
-    private void snakeHeadRender(Graphics2D g, Point aHeadCoord)
+    private void snakeHeadRender(Graphics2D g, Point aHeadCoord, Direction aSnakeDirection)
     {
-        Direction snakeDir = Direction.Down;
-
-        double angle = 90;
-        if (snakeDir == Direction.Left) angle = 90;
-        if (snakeDir == Direction.Right) angle = 180;
-        if (snakeDir == Direction.Down) angle = 135;
+        double angle = -90;
+        if (aSnakeDirection == Direction.Left)
+        {
+            angle = 180;
+        }
+        if (aSnakeDirection == Direction.Right)
+        {
+            angle = 0;
+        }
+        if (aSnakeDirection == Direction.Down) angle = 90;
 
         AffineTransform transform =
                 AffineTransform.getTranslateInstance
