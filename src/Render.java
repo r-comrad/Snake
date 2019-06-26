@@ -15,15 +15,21 @@ public class Render {
     private Image mSnakeHeadImage;
 
     private Image apple;
+    private Image apple2;
+
+    int cnt = 0;
 
     private BufferedImage mBufferedImage;
 
     public Render()
     {
-        ImageIcon appleIcon = new ImageIcon("apple.png");
+        ImageIcon appleIcon = new ImageIcon("res/apple2.png");
         apple = appleIcon.getImage();
 
-        ImageIcon dotIcon = new ImageIcon("dot.png");
+        ImageIcon appleIcon2 = new ImageIcon("res/apple3.png");
+        apple2 = appleIcon2.getImage();
+
+        ImageIcon dotIcon = new ImageIcon("res/dot.png");
         dot = dotIcon.getImage();
 
         mSnakeHeadImage = new ImageIcon("res/head.png").getImage();
@@ -42,7 +48,19 @@ public class Render {
 
     public void appleRender(Graphics2D g, Point aAppleCoord)
     {
-        g.drawImage(apple, aAppleCoord.x * DOT_SIZE, aAppleCoord.y * DOT_SIZE, null);
+        //if (cnt < 2)
+        if (cnt == 0)
+        {
+            g.drawImage(apple, aAppleCoord.x * DOT_SIZE, aAppleCoord.y * DOT_SIZE, null);
+            cnt = 1;
+        }
+        else
+        {
+            g.drawImage(apple2, aAppleCoord.x * DOT_SIZE, aAppleCoord.y * DOT_SIZE, null);
+            //if (cnt == 4) cnt = 0;
+            cnt = 0;
+        }
+        //++cnt;
     }
 
     public void snakeRender(Graphics2D g, ArrayList<Point> aSnakeCoord, Direction aSnakeDirection)
