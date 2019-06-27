@@ -5,6 +5,9 @@ import java.util.Random;
 
 public class Apple {
     private Point mAppleCoord;
+    private int mTimeCounter = 0;
+    private int mPeriod = 400;
+    private boolean needAction = false;
 
     public Apple(int aPoleSize, ArrayList<Point> aCoordinates)
     {
@@ -24,6 +27,23 @@ public class Apple {
                 check |= mAppleCoord.x == aCoordinates.get(i).x && mAppleCoord.y == aCoordinates.get(i).y;
             }
         }
+    }
+
+    public void update(int adTime)
+    {
+        mTimeCounter += adTime;
+        if (mTimeCounter >= mPeriod)
+        {
+            mTimeCounter %= mPeriod;
+            needAction = true;
+        }
+    }
+
+    public boolean isUpdated()
+    {
+        boolean result = needAction;
+        needAction= false;
+        return result;
     }
 
     public boolean isAte(ArrayList<Point> aCoordinates) {

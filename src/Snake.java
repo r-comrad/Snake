@@ -4,6 +4,8 @@ import java.util.Random;
 public class Snake {
     private ArrayList<Point> mCoordinates;
     private Direction mDirection;
+    private int mTimeCounter;
+    private int mPeriod;
 
     public Snake(int aPoleSize) {
         mDirection = Direction.values()[new Random().nextInt(4)];
@@ -14,6 +16,8 @@ public class Snake {
         point.y = new Random().nextInt(aPoleSize - 6) + 3;
         mCoordinates.add(point);
 
+        mPeriod = 380;
+
         for (int i = 0; i < 2; ++i) {
             //point = new Point();
             point = new Point(mCoordinates.get(i));
@@ -23,6 +27,16 @@ public class Snake {
                 point.x += ((mDirection == Direction.Left) ? 1 : -1);
             }
             mCoordinates.add(point);
+        }
+    }
+
+    public void update(int adTime)
+    {
+        mTimeCounter += adTime;
+        if (mTimeCounter >= mPeriod)
+        {
+            mTimeCounter %= mPeriod;
+            move();
         }
     }
 
@@ -45,6 +59,8 @@ public class Snake {
     }
 
     public void feed() {
+        mPeriod = (int) (((double) mPeriod) / (1. + (getPoints() / 7.5)));
+        if (mPeriod == 0) mPeriod = 1;
         mCoordinates.add(new Point());
     }
 

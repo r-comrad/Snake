@@ -31,17 +31,17 @@ public class GameField extends JPanel implements ActionListener {
     private Apple mApple;
     private Snake mSnake;
     private boolean inGame = true;
-    private Timer timer;
+    private Timer mTimer;
     private Map<Integer, Direction> encoding  = new HashMap<>();
-    private final int initialTimePeriod = 380;
+    private final int initialTimePeriod = 10;
 
     public GameField() {
         mRender= new Render();
         mSnake = new Snake(19);
         mApple = new Apple(19, mSnake.getCoordinates());
 
-        timer = new Timer(250,this);
-        timer.start();
+        mTimer = new Timer(initialTimePeriod,this);
+        mTimer.start();
 
         setBackground(Color.blue);
         setFocusable(true);
@@ -95,18 +95,19 @@ public class GameField extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-
+        mSnake.update(mTimer.getDelay());
+        mApple.update(mTimer.getDelay());
+        if (mApple.isUpdated()) mRender.updateAppleImg();
 
         if (inGame) {
             if (mApple.isAte(mSnake.getCoordinates()))
             {
                 mSnake.feed();
                 mApple.createApple(19, mSnake.getCoordinates());
-                timer.setDelay((int) (initialTimePeriod / (1. + mSnake.getPoints() / 7.5)));
+                //timer.setDelay((int) (initialTimePeriod / (1. + mSnake.getPoints() / 7.5)));
             }
             if (mSnake.selfHarm(19)) inGame = false;
-            mSnake.move();
+            //mSnake.move();
             draw();
         }
         repaint();

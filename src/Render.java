@@ -16,6 +16,7 @@ public class Render {
 
     private Image apple;
     private Image apple2;
+    private int mAppleState = 0;
 
     int cnt = 0;
 
@@ -41,15 +42,20 @@ public class Render {
 
     public void update()
     {
-        mBufferedImage = new BufferedImage(400, 400, BufferedImage.TYPE_INT_RGB);
+       // mBufferedImage = new BufferedImage(400, 400, BufferedImage.TYPE_INT_RGB);
         //mGraphics = (Graphics2D) mBufferedImage.getGraphics();
         //mGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    }
+
+    public void updateAppleImg()
+    {
+        mAppleState = mAppleState == 0 ? 1 : 0;
     }
 
     public void appleRender(Graphics2D g, Point aAppleCoord)
     {
         //if (cnt < 2)
-        if (cnt == 0)
+        if (mAppleState == 0)
         {
             g.drawImage(apple, aAppleCoord.x * DOT_SIZE, aAppleCoord.y * DOT_SIZE, null);
             cnt = 1;
