@@ -1,13 +1,21 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Snake {
+enum Direction {
+    Left, Up, Right, Down;
+
+    public boolean isOppositeDirection(Direction other) {
+        return Math.abs(this.ordinal() - other.ordinal()) == 2;
+    }
+}
+
+public class Snake extends GameObject {
     private ArrayList<Point> mCoordinates;
     private Direction mDirection;
-    private int mTimeCounter;
-    private int mPeriod;
 
     public Snake(int aPoleSize) {
+        super(380);
+
         mDirection = Direction.values()[new Random().nextInt(4)];
 
         mCoordinates = new ArrayList<>();
@@ -16,10 +24,7 @@ public class Snake {
         point.y = new Random().nextInt(aPoleSize - 6) + 3;
         mCoordinates.add(point);
 
-        mPeriod = 380;
-
         for (int i = 0; i < 2; ++i) {
-            //point = new Point();
             point = new Point(mCoordinates.get(i));
             if (mDirection == Direction.Up || mDirection == Direction.Down) {
                 point.y += ((mDirection == Direction.Up) ? 1 : -1);
@@ -30,17 +35,7 @@ public class Snake {
         }
     }
 
-    public void update(int adTime)
-    {
-        mTimeCounter += adTime;
-        if (mTimeCounter >= mPeriod)
-        {
-            mTimeCounter %= mPeriod;
-            move();
-        }
-    }
-
-    public void move() {
+    protected void move() {
         for (int i = mCoordinates.size() - 1; i > 0; i--) {
             mCoordinates.set(i, new Point(mCoordinates.get(i - 1)));
         }
@@ -51,7 +46,6 @@ public class Snake {
         } else {
             point.x += ((mDirection == Direction.Left) ? -1 : 1);
         }
-        //mCoordinates.set(0, point);
     }
 
     public ArrayList<Point> getCoordinates() {
@@ -59,38 +53,38 @@ public class Snake {
     }
 
     public void feed() {
-        mPeriod = (int) (((double) mPeriod) / (1. + (getPoints() / 7.5)));
-        if (mPeriod == 0) mPeriod = 1;
+        changePeriod(1. / (1. + (getPoints() / 10.)));
         mCoordinates.add(new Point());
     }
 
     public boolean selfHarm(int aPoleSize) {
         boolean result = false;
+        Point firstPoint = mCoordinates.get(0);
+
         for (int i = 3; i < mCoordinates.size(); ++i) {
-            if (mCoordinates.get(0).x == mCoordinates.get(i).x &&
-                    mCoordinates.get(0).y == mCoordinates.get(i).y) {
+            Point otherPoint = mCoordinates.get(i);
+            if (firstPoint.x == otherPoint.x && firstPoint.y == otherPoint.y) {
                 result = true;
             }
         }
 
-        if (mCoordinates.get(0).x > aPoleSize || mCoordinates.get(0).x < 0 ||
-                mCoordinates.get(0).y > aPoleSize || mCoordinates.get(0).y < 0) {
+        if (firstPoint.x > aPoleSize || firstPoint.x < 0 ||
+                firstPoint.y > aPoleSize || firstPoint.y < 0) {
             result = true;
         }
+
         return result;
     }
 
-    public void setmDirection(Direction aNewDir) {
+    public void setDirection(Direction aNewDir) {
         if (!mDirection.isOppositeDirection(aNewDir)) mDirection = aNewDir;
     }
 
-    public int getPoints()
-    {
+    private int getPoints() {
         return mCoordinates.size() - 3;
     }
 
-    public Direction getDirection()
-    {
+    public Direction getDirection() {
         return mDirection;
     }
 }

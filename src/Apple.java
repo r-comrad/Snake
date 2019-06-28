@@ -3,15 +3,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Apple {
+public class Apple extends GameObject {
     private Point mAppleCoord;
-    private int mTimeCounter = 0;
-    private int mPeriod = 400;
-    private boolean needAction = false;
+    private boolean mHasChanges;
 
-    public Apple(int aPoleSize, ArrayList<Point> aCoordinates)
-    {
+    public Apple(int aPoleSize, ArrayList<Point> aCoordinates) {
+        super(400);
         mAppleCoord = new Point();
+        mHasChanges = false;
         createApple(aPoleSize, aCoordinates);
     }
 
@@ -22,27 +21,19 @@ public class Apple {
             mAppleCoord.y = new Random().nextInt(aPoleSize);
 
             check = false;
-            for (int i = 0; i < aCoordinates.size(); ++i)
-            {
+            for (int i = 0; i < aCoordinates.size(); ++i) {
                 check |= mAppleCoord.x == aCoordinates.get(i).x && mAppleCoord.y == aCoordinates.get(i).y;
             }
         }
     }
 
-    public void update(int adTime)
-    {
-        mTimeCounter += adTime;
-        if (mTimeCounter >= mPeriod)
-        {
-            mTimeCounter %= mPeriod;
-            needAction = true;
-        }
+    protected void move() {
+        mHasChanges = true;
     }
 
-    public boolean isUpdated()
-    {
-        boolean result = needAction;
-        needAction= false;
+    public boolean isChanged() {
+        boolean result = mHasChanges;
+        mHasChanges = false;
         return result;
     }
 
@@ -50,8 +41,7 @@ public class Apple {
         return aCoordinates.get(0).x == mAppleCoord.x && aCoordinates.get(0).y == mAppleCoord.y;
     }
 
-    public Point getAppleCoordinates()
-    {
+    public Point getAppleCoordinates() {
         return mAppleCoord;
     }
 }
