@@ -57,11 +57,7 @@ public class GameField extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         mSnake.update(mTimer.getDelay());
-
-        mApple.update(mTimer.getDelay());
-        if (mApple.isChanged()) mRender.updateAppleImg();
-
-        if (mInGame) {
+        if (mSnake.isChanged() && mInGame) {
             if (mApple.isAte(mSnake.getCoordinates())) {
                 mSnake.feed();
                 mApple.createApple(19, mSnake.getCoordinates());
@@ -70,6 +66,10 @@ public class GameField extends JPanel implements ActionListener {
                 mInGame = false;
             }
         }
+
+        mApple.update(mTimer.getDelay());
+        if (mApple.isChanged()) mRender.updateAppleImg();
+
         repaint();
     }
 

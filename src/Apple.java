@@ -5,12 +5,10 @@ import java.util.Random;
 
 public class Apple extends GameObject {
     private Point mAppleCoord;
-    private boolean mHasChanges;
 
     public Apple(int aPoleSize, ArrayList<Point> aCoordinates) {
         super(400);
         mAppleCoord = new Point();
-        mHasChanges = false;
         createApple(aPoleSize, aCoordinates);
     }
 
@@ -25,16 +23,6 @@ public class Apple extends GameObject {
                 check |= mAppleCoord.x == aCoordinates.get(i).x && mAppleCoord.y == aCoordinates.get(i).y;
             }
         }
-    }
-
-    protected void move() {
-        mHasChanges = true;
-    }
-
-    public boolean isChanged() {
-        boolean result = mHasChanges;
-        mHasChanges = false;
-        return result;
     }
 
     public boolean isAte(ArrayList<Point> aCoordinates) {
