@@ -61,7 +61,7 @@ public class Snake extends GameObject {
         boolean result = false;
         Point firstPoint = mCoordinates.get(0);
 
-        for (int i = 3; i < mCoordinates.size(); ++i) {
+        for (int i = 1; i < mCoordinates.size(); ++i) {
             Point otherPoint = mCoordinates.get(i);
             if (firstPoint.x == otherPoint.x && firstPoint.y == otherPoint.y) {
                 result = true;

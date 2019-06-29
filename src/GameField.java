@@ -9,10 +9,11 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 
 public class GameField extends JPanel implements ActionListener {
-    private Render mRender;
-
     private Apple mApple;
     private Snake mSnake;
+
+    private SnakeRender mSnakeRender;
+    private AppleRender mAppleRender;
 
     private boolean mInGame = true;
 
@@ -22,14 +23,15 @@ public class GameField extends JPanel implements ActionListener {
     private final int initialTimePeriod = 10;
 
     public GameField() {
-        mRender = new Render();
+        setBackground(Color.blue);
+        setFocusable(true);
+        requestFocus();
 
         mSnake = new Snake(19);
         mApple = new Apple(19, mSnake.getCoordinates());
 
-        setBackground(Color.blue);
-        setFocusable(true);
-        requestFocus();
+        mSnakeRender = new SnakeRender();
+        mAppleRender = new AppleRender();
 
         addKeyListener(new FieldKeyListener());
 
@@ -45,8 +47,8 @@ public class GameField extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (mInGame) {
-            mRender.appleRender((Graphics2D) g, mApple.getAppleCoordinates());
-            mRender.snakeRender((Graphics2D) g, mSnake.getCoordinates(), mSnake.getDirection());
+            mAppleRender.draw((Graphics2D) g, mApple.getAppleCoordinates());
+            mSnakeRender.draw((Graphics2D) g, mSnake.getCoordinates(), mSnake.getDirection());
         } else {
             String str = "Game cacai!";
             g.setColor(Color.white);
@@ -68,7 +70,7 @@ public class GameField extends JPanel implements ActionListener {
         }
 
         mApple.update(mTimer.getDelay());
-        if (mApple.isChanged()) mRender.updateAppleImg();
+        if (mApple.isChanged()) mAppleRender.update();
 
         repaint();
     }
