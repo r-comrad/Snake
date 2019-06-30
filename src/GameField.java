@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 public class GameField extends JPanel implements ActionListener {
     private Apple mApple;
     private Snake mSnake;
+    private Walls mWalls;
 
     private SnakeRender mSnakeRender;
     private AppleRender mAppleRender;
@@ -21,17 +22,19 @@ public class GameField extends JPanel implements ActionListener {
     private Map<Integer, Direction> encoding = new HashMap<>();
 
     private final int initialTimePeriod = 10;
+    private final int mPoleSize = 18;
 
     public GameField() {
         setBackground(Color.blue);
         setFocusable(true);
         requestFocus();
 
-        mSnake = new Snake(19);
-        mApple = new Apple(19, mSnake.getCoordinates());
+        mSnake = new Snake(mPoleSize);
+        mApple = new Apple(mPoleSize, mSnake.getCoordinates());
 
         mSnakeRender = new SnakeRender();
         mAppleRender = new AppleRender();
+        mWalls = new Walls(mPoleSize);
 
         addKeyListener(new FieldKeyListener());
 
@@ -47,12 +50,14 @@ public class GameField extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (mInGame) {
-            mAppleRender.draw((Graphics2D) g, mApple.getAppleCoordinates());
-            mSnakeRender.draw((Graphics2D) g, mSnake.getCoordinates(), mSnake.getDirection());
+            Graphics2D g2 = (Graphics2D) g;
+            mAppleRender.draw(g2, mApple.getAppleCoordinates());
+            mSnakeRender.draw(g2, mSnake.getCoordinates(), mSnake.getDirection());
+            mWalls.draw(g2);
         } else {
             String str = "Game cacai!";
             g.setColor(Color.white);
-            g.drawString(str, 125, 125);
+            g.drawString(str, 180, 180);
         }
     }
 
@@ -62,9 +67,9 @@ public class GameField extends JPanel implements ActionListener {
         if (mSnake.isChanged() && mInGame) {
             if (mApple.isAte(mSnake.getCoordinates())) {
                 mSnake.feed();
-                mApple.createApple(19, mSnake.getCoordinates());
+                mApple.createApple(mPoleSize, mSnake.getCoordinates());
             }
-            if (mSnake.selfHarm(19)) {
+            if (mSnake.selfHarm(mPoleSize)) {
                 mInGame = false;
             }
         }

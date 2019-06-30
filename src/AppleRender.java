@@ -21,11 +21,11 @@ public class AppleRender extends Render {
 
     public void draw(Graphics2D g, Point aAppleCoord) {
         if (mAppleState) {
-            g.drawImage(mAppleOnImage, aAppleCoord.x * DOT_SIZE,
-                    aAppleCoord.y * DOT_SIZE, null);
+            g.drawImage(mAppleOnImage, aAppleCoord.x * DOT_SIZE + mCoordinatesOffset,
+                    aAppleCoord.y * DOT_SIZE + mCoordinatesOffset, null);
         } else {
-            g.drawImage(mAppleOffImage, aAppleCoord.x * DOT_SIZE,
-                    aAppleCoord.y * DOT_SIZE, null);
+            g.drawImage(mAppleOffImage, aAppleCoord.x * DOT_SIZE + mCoordinatesOffset,
+                    aAppleCoord.y * DOT_SIZE + mCoordinatesOffset, null);
         }
     }
 }

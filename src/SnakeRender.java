@@ -22,8 +22,8 @@ public class SnakeRender extends Render {
 
     private void snakeBodyRender(Graphics2D g, ArrayList<Point> aSnakeCoord) {
         for (int i = 1; i < aSnakeCoord.size(); ++i) {
-            g.drawImage(mSnakeBodyImage, aSnakeCoord.get(i).x * DOT_SIZE,
-                    aSnakeCoord.get(i).y * DOT_SIZE, null);
+            g.drawImage(mSnakeBodyImage, aSnakeCoord.get(i).x * DOT_SIZE + mCoordinatesOffset,
+                    aSnakeCoord.get(i).y * DOT_SIZE + mCoordinatesOffset, null);
         }
 
     }
@@ -36,7 +36,8 @@ public class SnakeRender extends Render {
 
         AffineTransform transform =
                 AffineTransform.getTranslateInstance
-                        (aHeadCoord.x * DOT_SIZE, aHeadCoord.y * DOT_SIZE);
+                        (aHeadCoord.x * DOT_SIZE + mCoordinatesOffset,
+                                aHeadCoord.y * DOT_SIZE + mCoordinatesOffset);
         transform.rotate(Math.toRadians(angle),
                 mSnakeHeadImage.getWidth(null) / 2,
                 mSnakeHeadImage.getHeight(null) / 2);

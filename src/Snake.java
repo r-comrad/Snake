@@ -68,8 +68,8 @@ public class Snake extends GameObject {
             }
         }
 
-        if (firstPoint.x > aPoleSize || firstPoint.x < 0 ||
-                firstPoint.y > aPoleSize || firstPoint.y < 0) {
+        if (firstPoint.x >= aPoleSize || firstPoint.x < 0 ||
+                firstPoint.y >= aPoleSize || firstPoint.y < 0) {
             result = true;
         }
 
