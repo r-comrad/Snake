@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class SnakeRender extends Render {
     private Image mSnakeBodyImage;
     private Image mSnakeHeadImage;
+    private Image mSnakeTailImage;
 
     public SnakeRender() {
         ImageIcon snakeBodyIcon = new ImageIcon("res/snake_body.png");
@@ -13,6 +14,9 @@ public class SnakeRender extends Render {
 
         ImageIcon snakeHeadIcon = new ImageIcon("res/snake_head.png");
         mSnakeHeadImage = snakeHeadIcon.getImage();
+
+        ImageIcon snakeTailIcon = new ImageIcon("res/snake_tail.png");
+        mSnakeTailImage = snakeTailIcon.getImage();
     }
 
     public void draw(Graphics2D g, ArrayList<Point> aSnakeCoord, Direction aSnakeDirection) {
@@ -21,11 +25,14 @@ public class SnakeRender extends Render {
     }
 
     private void snakeBodyRender(Graphics2D g, ArrayList<Point> aSnakeCoord) {
-        for (int i = 1; i < aSnakeCoord.size(); ++i) {
+        for (int i = 1; i < aSnakeCoord.size() - 1; ++i) {
             g.drawImage(mSnakeBodyImage, aSnakeCoord.get(i).x * DOT_SIZE + mCoordinatesOffset,
                     aSnakeCoord.get(i).y * DOT_SIZE + mCoordinatesOffset, null);
         }
 
+        g.drawImage(mSnakeTailImage, aSnakeCoord.get(aSnakeCoord.size() - 1).x *
+                        DOT_SIZE + mCoordinatesOffset, aSnakeCoord.get(aSnakeCoord.size() - 1).y *
+                DOT_SIZE + mCoordinatesOffset, null);
     }
 
     private void snakeHeadRender(Graphics2D g, Point aHeadCoord, Direction aSnakeDirection) {
