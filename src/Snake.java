@@ -7,16 +7,25 @@ enum Direction {
     public boolean isOppositeDirection(Direction other) {
         return Math.abs(this.ordinal() - other.ordinal()) == 2;
     }
+
+    public boolean isHorizontal() {
+        return this == Left || this == Right;
+    }
 }
 
 public class Snake extends GameObject {
     private ArrayList<Point> mCoordinates;
-    private Direction mDirection;
+    private ArrayList<Direction> mDirection;
+    private Direction mNewDirection;
 
     public Snake(int aPoleSize) {
         super(380);
 
-        mDirection = Direction.values()[new Random().nextInt(4)];
+
+        Direction dir = Direction.values()[new Random().nextInt(4)];
+        mDirection = new ArrayList<>();
+        for (int i = 0; i < 3; ++i) mDirection.add(dir);
+        mNewDirection = dir;
 
         mCoordinates = new ArrayList<>();
         Point point = new Point(0, 0);
@@ -26,25 +35,29 @@ public class Snake extends GameObject {
 
         for (int i = 0; i < 2; ++i) {
             point = new Point(mCoordinates.get(i));
-            if (mDirection == Direction.Up || mDirection == Direction.Down) {
-                point.y += ((mDirection == Direction.Up) ? 1 : -1);
+            if (dir == Direction.Up || dir == Direction.Down) {
+                point.y += ((dir == Direction.Up) ? 1 : -1);
             } else {
-                point.x += ((mDirection == Direction.Left) ? 1 : -1);
+                point.x += ((dir == Direction.Left) ? 1 : -1);
             }
             mCoordinates.add(point);
         }
     }
 
     protected void move() {
+        mDirection.set(0, mNewDirection);
+
         for (int i = mCoordinates.size() - 1; i > 0; i--) {
             mCoordinates.set(i, new Point(mCoordinates.get(i - 1)));
+            mDirection.set(i, mDirection.get(i - 1));
         }
 
         Point point = mCoordinates.get(0);
-        if (mDirection == Direction.Up || mDirection == Direction.Down) {
-            point.y += ((mDirection == Direction.Up) ? -1 : 1);
+        Direction dir = mDirection.get(0);
+        if (dir == Direction.Up || dir == Direction.Down) {
+            point.y += ((dir == Direction.Up) ? -1 : 1);
         } else {
-            point.x += ((mDirection == Direction.Left) ? -1 : 1);
+            point.x += ((dir == Direction.Left) ? -1 : 1);
         }
     }
 
@@ -55,6 +68,7 @@ public class Snake extends GameObject {
     public void feed() {
         changePeriod(1. / (1. + (getPoints() / 10.)));
         mCoordinates.add(new Point());
+        mDirection.add(mDirection.get(mDirection.size() - 1));
     }
 
     public boolean selfHarm(int aPoleSize) {
@@ -77,7 +91,10 @@ public class Snake extends GameObject {
     }
 
     public void setDirection(Direction aNewDir) {
-        if (!mDirection.isOppositeDirection(aNewDir)) mDirection = aNewDir;
+        Direction dir = mDirection.get(0);
+        if (!dir.isOppositeDirection(aNewDir)) {
+            mNewDirection = aNewDir;
+        }
     }
 
     private int getPoints() {
@@ -85,6 +102,10 @@ public class Snake extends GameObject {
     }
 
     public Direction getDirection() {
+        return mDirection.get(0);
+    }
+
+    public ArrayList<Direction> getDirectionHistory() {
         return mDirection;
     }
 }

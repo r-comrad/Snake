@@ -52,7 +52,7 @@ public class GameField extends JPanel implements ActionListener {
         if (mInGame) {
             Graphics2D g2 = (Graphics2D) g;
             mAppleRender.draw(g2, mApple.getAppleCoordinates());
-            mSnakeRender.draw(g2, mSnake.getCoordinates(), mSnake.getDirection());
+            mSnakeRender.draw(g2, mSnake.getCoordinates(), mSnake.getDirectionHistory());
             mWalls.draw(g2);
         } else {
             String str = "Game cacai!";
